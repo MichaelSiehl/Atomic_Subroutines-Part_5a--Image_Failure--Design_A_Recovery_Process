@@ -24,17 +24,21 @@ The program implements a simple (nonsensical) fast running parallel algorithm: R
 The OOOPimsc_admImageStatus_CA.f90 source code file contains all the logic codes. Public access to the parallel algorithm is available through the OOOPimsc_RestoreSegmentOrder_CA procedure. (The algorithm requires one coarray image that executes code for controlling the execution of the algorithm and a number of remote images that are used for restoring the segment order among them).<br />
 
 We call that algorithm successive two times from Main.f90. With our first call (A) to the  OOOPimsc_RestoreSegmentOrder_CA procedure we use the optional 'logRaiseAnError = .true.' argument to intentionally raise a runtime failure. (On my laptop computer, it was already enough not to execute the algorithm on one of the involved remote images to completely corrupt the remote data transfer channels of the atomic component of the derived type coarray on all involved images). The output from such is then:<br />
-RestoreSegmentOrder A failed on image           3 <br /> 
-RestoreSegmentOrder A failed on image           4 <br />
-RestoreSegmentOrder A failed on image           6 <br />
-RestoreSegmentOrder A failed on image           2 <br />
-RestoreSegmentOrder A failed on image           5 <br />
-RestoreSegmentOrder A failed on image           1 <br />
+```fortran
+RestoreSegmentOrder A failed on image           3
+RestoreSegmentOrder A failed on image           4
+RestoreSegmentOrder A failed on image           6
+RestoreSegmentOrder A failed on image           2
+RestoreSegmentOrder A failed on image           5
+RestoreSegmentOrder A failed on image           1
+```
 
 With our second call  (B)  to the  OOOPimsc_RestoreSegmentOrder_CA procedure we use the optional 'logReAllocateCoarrayObject = .true.' argument to repair (restore or newly establish) those corrupted data transfer channels by simply reallocating them. The output after successful repair is then:<br />
-RestoreSegmentOrder B successful on image           2 <br />
-RestoreSegmentOrder B successful on image           3 <br />
-RestoreSegmentOrder B successful on image           5 <br />
-RestoreSegmentOrder B successful on image           6 <br />
-RestoreSegmentOrder B successful on image           4 <br />
-RestoreSegmentOrder B successful on image           1 <br />
+```fortran
+RestoreSegmentOrder B successful on image           2
+RestoreSegmentOrder B successful on image           3
+RestoreSegmentOrder B successful on image           5
+RestoreSegmentOrder B successful on image           6
+RestoreSegmentOrder B successful on image           4
+RestoreSegmentOrder B successful on image           1
+```
