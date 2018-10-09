@@ -47,7 +47,7 @@ RestoreSegmentOrder B successful on image           1
 
 This code file contains all the required codes. The relevant codes are:<br />
 
-- OOOPimscEnum_ImageActivityFlag: An integer-based enumeration that we use to pack it's integer values with another reduced-size integer value for use with atomic subroutines within the parallel algorithm.
+- ```fortranOOOPimscEnum_ImageActivityFlag```: An integer-based enumeration that we use to pack it's integer values with another reduced-size integer value for use with atomic subroutines within the parallel algorithm.
 - OOOPimsc_adtImageStatus_CA: A derived type definition mainly containing an atomic integer array component.
 - OOOPimscImageStatus_CA_1: Our (only) allocatable coarray declaration.
 - Two simple procedures to allocate and reallocate (newly allocate to repair corrupted data transfer channels) our derived type coarray object.
