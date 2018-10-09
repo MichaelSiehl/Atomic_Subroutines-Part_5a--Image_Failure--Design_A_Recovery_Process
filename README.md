@@ -7,7 +7,7 @@ The small example program herein may give sufficient proof that we can make safe
 
 This works mainly because the programmer can store two (reduced-size) integer values into a single integer variable and because the compilers do support the use of (derived type coarrays with) integer array components (only one array element at a time of course) together with atomic subroutines. (It is especially this support for arrays and array syntax that can become very helpful for sophisticated handling of upcoming parallel machines. Thus, the topic is not just Fortran but also hardware related).<br />
 
-To recover from corrupted coarray data transfer channels, we can simply reallocate them with the ALLOCATE statement (we use allocatable coarrays of derived type) to newly establish that coarray on all images of the current team (Fortran 2018).<br />
+To recover from corrupted coarray data transfer channels, we can simply reallocate them using the ALLOCATE statement (we use allocatable coarrays of derived type) to newly establish that coarray on all images of the current team (Fortran 2018).<br />
 
 The example program does already offer detection and handling of (many kinds of) errors with the parallel execution, as well as detection and handling of slow running parallel algorithms (but that's not used here). <br />
 
