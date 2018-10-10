@@ -550,10 +550,13 @@ subroutine OOOPimscEventWaitScalar_intImageActivityFlag99_CA (Object_CA, intChec
   integer(OOOGglob_kint), optional, dimension (1:intNumberOfImages), intent (out) :: intA_TheFailedImageNumbers
   integer(OOOGglob_kint) :: intCountTheFailedImages ! do loop counter variable
   !
-  ! abort timer for the spin-wait loop:
-  real(OOOGglob_krea) :: reaTime1 = 0
-  real(OOOGglob_krea) :: reaTime2 = 0
-  real(OOOGglob_krea) :: reaTimeShift = 0
+  ! abort timer for the spin-wait loop
+  ! (using system_clock):
+  real(OOOGglob_krea) :: reaCountRate = 0.0
+  integer(OOOGglob_kint) :: intTime1 = 0
+  integer(OOOGglob_kint) :: intTime2 = 0
+  real(OOOGglob_krea) :: reaTimeShift = 0.0
+  !
   logical(OOOGglob_klog), optional, intent (in) :: logActivateTimeLimitAbort ! default is .true.
   logical(OOOGglob_klog) :: logActivateTimeLimitAbor
   real(OOOGglob_krea), optional, intent (in) :: reaTimeLimitInSeconds ! time limit for the customized EventWait sync
@@ -609,12 +612,15 @@ subroutine OOOPimscEventWaitScalar_intImageActivityFlag99_CA (Object_CA, intChec
     logActivateTimeLimitAbor = .true.
   end if
   !****
+  ! initiate the timer:
   if (present(reaTimeLimitInSeconds)) then
     reaTimeLimitInSec = reaTimeLimitInSeconds
-    call cpu_time(reaTime1) ! initiate the timer
+    call system_clock(count_rate = reaCountRate)
+    call system_clock(count = intTime1) ! initiate the timer
   else ! default:
     reaTimeLimitInSec = OOOGglob_reaTimeLimitInSec_small
-    call cpu_time(reaTime1) ! initiate the timer
+    call system_clock(count_rate = reaCountRate)
+    call system_clock(count = intTime1) ! initiate the timer
   end if
   !****
   if (present(logTimeLimitAbortDidOccur)) then
@@ -691,8 +697,8 @@ subroutine OOOPimscEventWaitScalar_intImageActivityFlag99_CA (Object_CA, intChec
     !*********
     ! local abort timer (time limit) for the spin-wait synchronization:
     if (logActivateTimeLimitAbor) then ! default is .true.
-      call cpu_time(reaTime2)
-      reaTimeShift = reaTime2 - reaTime1
+      call system_clock(count = intTime2)
+      reaTimeShift = real(intTime2 - intTime1) / reaCountRate
       if (reaTimeShift > reaTimeLimitInSec) then ! the time limit for the spin-wait loop has been exceeded
         ! do a local EventPost to terminate the spin-wait loop:
         ! (the abort will then be done in the below code section 'for leaving a fault
